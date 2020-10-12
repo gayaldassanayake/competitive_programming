@@ -1,0 +1,56 @@
+inp = list(map(int,input().split()))
+n = inp[0]
+k = inp[1]
+unsafe = input()
+www = []
+val = [0 for i in range(n+1)]
+parent = [-1 for i in range(n + 1)]
+parent[0] = 0
+pz = [-1 for i in range(n + 1)]
+pz[0] = 0
+for i in range(len(val)):
+    if(unsafe[i] == '1'):
+        val[i] = float("inf")
+
+# parent = [0 for i in range(n+1)]
+ind = -1
+for i in range(n+1):
+    x = float("inf")
+    for j in range(k,0,-1):
+        if(unsafe[i] == '1'):
+            # val[i] = float("inf")
+            break
+        if(i-j<0):
+            continue
+        if(val[i-j] == float("inf")):
+            val[i] = float("inf")
+        if(val[i-j] < x):
+            x = val[i-j]
+            val[i] = 1+x
+            parent[i] = j
+            pz[i] = i-j
+            break
+    
+
+# print(val)
+# print(parent)
+# print(pz)
+if(val[-1] == float("inf") or val[-1] == 0 or unsafe[0] == '1'):
+    print(-1)
+else:
+    # for i in range(1,val[-1]):
+    #     www.append(val.index(i))
+    # www.append(len(val)-1)
+    # xx = www[:]
+    # # print(www)
+    # for i in range(1,len(www)):
+    #     xx[i] = www[i] - www[i-1]        
+    # print(' '.join(list(map(str,xx))))
+    kk = n
+    s = ''
+    while(True):
+        s=str(parent[kk])+" " + s
+        kk = pz[kk]
+        if(kk ==0):
+            break
+    print(s)

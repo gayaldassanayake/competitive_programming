@@ -1,0 +1,62 @@
+from collections import defaultdict
+
+
+def intes_circle(x1, y1, x2, y2, r1, r2):
+    dist_sq = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)
+    rad_sum_sq = (r1 + r2) * (r1 + r2)
+    if (dist_sq == rad_sum_sq):
+        return True
+    elif (dist_sq > rad_sum_sq):
+        return False
+    else:
+        return True
+
+
+def intes_lhs(x, y, r):
+    return x - r <= 0
+
+
+def intes_rhs(x, y, r):
+    return x + r >= W
+
+
+def dfs(graph, start):
+    visited = set()
+    stack = [start]
+    while stack:
+        node = stack.pop()
+        visited.add(node)
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                stack.append(neighbor)
+    return visited
+
+
+A = -1
+B = -2
+
+T, H, W = list(map(int, input().strip().split()))
+
+for _ in range(T):
+    g = defaultdict(set)
+    n, r = list(map(int, input().strip().split()))
+    x = list(map(int, input().strip().split()))
+    y = list(map(int, input().strip().split()))
+    for i in range(n):
+        if intes_lhs(x[i], y[i], r):
+            g[A].add(i)
+            g[i].add(A)
+        if intes_rhs(x[i], y[i], r):
+            g[B].add(i)
+            g[i].add(B)
+
+        for j in range(i+1, n):
+            inte = intes_circle(x[i], y[i], x[j], y[j], r, r)
+            if inte:
+                g[i].add(j)
+                g[j].add(i)
+    v = dfs(g, A)
+    if B in v:
+        print('CAN\'T')
+    else:
+        print("CAN")
