@@ -1,0 +1,78 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+import heapq
+#
+# Complete the 'getCost' function below.
+#
+# The function accepts WEIGHTED_INTEGER_GRAPH g as parameter.
+#
+
+#
+# For the weighted graph, <name>:
+#
+# 1. The number of nodes is <name>_nodes.
+# 2. The number of edges is <name>_edges.
+# 3. An edge exists between <name>_from[i] and <name>_to[i]. The weight of the edge is <name>_weight[i].
+#
+#
+
+def getCost(g_nodes, g_from, g_to, g_weight):
+    graph = dict()
+    visited = []
+    for i in range(1, g_nodes+1):
+        graph[i] = []
+        if i == 1:
+            # cost, to, from
+            visited.append([0, 1, 0])
+        else:
+            visited.append([1e9, i, -1])
+
+    for i in range(len(g_from)):
+        graph[g_from[i]].append((g_to[i], g_weight[i]))
+        graph[g_to[i]].append((g_from[i], g_weight[i]))
+
+    finished = []
+
+    while visited != []:
+        min_cost_node = 0
+        min_cost = 1e9
+        min_cost_index = -1
+        for i in range(len(visited)):
+            if visited[i][0] < min_cost:
+                min_cost = visited[i][0]
+                min_cost_node = visited[i][1]
+                min_cost_index = i
+        del visited[min_cost_index]
+        finished.append(min_cost_node)
+        if min_cost_node == g_nodes:
+            print(min_cost)
+            break
+        else:
+            for child in graph[min_cost_node]:
+                if (child[0] not in finished):
+                    i = 0
+                    while visited[i][1] != child[0]:
+                        i += 1
+                    if max(min_cost, child[1]) < visited[i][0]:
+                        visited[i][0] = max(min_cost, child[1])
+                        visited[i][2] = min_cost_node
+
+
+    # Print your answer within the function and return nothing
+
+if __name__ == '__main__':
+    g_nodes, g_edges = map(int, input().rstrip().split())
+
+    g_from = [0] * g_edges
+    g_to = [0] * g_edges
+    g_weight = [0] * g_edges
+
+    for i in range(g_edges):
+        g_from[i], g_to[i], g_weight[i] = map(int, input().rstrip().split())
+
+    getCost(g_nodes, g_from, g_to, g_weight)
